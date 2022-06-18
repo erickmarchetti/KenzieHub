@@ -13,6 +13,8 @@ import { DashBoardContainer } from "./style"
 
 import { useState, useEffect } from "react"
 import { useForm } from "react-hook-form"
+import * as yup from "yup"
+import { yupResolver } from "@hookform/resolvers/yup"
 
 function DashBoard({ routesController }) {
   const [dataUser, setDataUser] = useState({})
@@ -22,6 +24,10 @@ function DashBoard({ routesController }) {
   const [techForUpdate, setTechForUpdate] = useState({})
 
   const token = window.localStorage.getItem("token")
+
+  const schema = yup.object().shape({
+    title: yup.string().required()
+  })
 
   useEffect(() => {
     const id = window.localStorage.getItem("idUser")
@@ -41,7 +47,7 @@ function DashBoard({ routesController }) {
         toast.success("Tecnologia cadastrada!")
         setModalAddIsOpen(false)
       })
-      .catch((err) => console.log(err))
+      .catch(() => toast.error("Tecnologia já cadastrada"))
   }
 
   function updateTech(newData) {
@@ -91,7 +97,9 @@ function DashBoard({ routesController }) {
     routesController.push("/login")
   }
 
-  const { register, handleSubmit } = useForm()
+  const { register, handleSubmit } = useForm({
+    resolver: yupResolver(schema)
+  })
 
   return (
     <>
