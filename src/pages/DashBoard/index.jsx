@@ -17,13 +17,17 @@ import * as yup from "yup"
 import { yupResolver } from "@hookform/resolvers/yup"
 
 function DashBoard({ routesController }) {
+  const token = window.localStorage.getItem("token")
+
+  useEffect(() => {
+    !token && routesController.push("/")
+  }, [token])
+
   const [dataUser, setDataUser] = useState({})
 
   const [modalAddIsOpen, setModalAddIsOpen] = useState(false)
   const [modalUpdateIsOpen, setModalUpdateIsOpen] = useState(false)
   const [techForUpdate, setTechForUpdate] = useState({})
-
-  const token = window.localStorage.getItem("token")
 
   const schema = yup.object().shape({
     title: yup.string().required()
